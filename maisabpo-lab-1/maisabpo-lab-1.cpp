@@ -21,9 +21,10 @@ std::vector<T> string_to_int_array(const std::string& convertString)
 
 	return convertedString;
 }
-template <typename inT, typename outT, size_t size>
+template <typename inT, typename outT>
 std::vector<outT> convert_to_bits(inT num)
 {
+	const uint32_t size = sizeof(inT) * 8;
 	std::vector<outT> convertedNum = {};
 	std::bitset<size> binary(num);
 	for (int i = 0; i < size / 8; i++)
@@ -32,7 +33,7 @@ std::vector<outT> convert_to_bits(inT num)
 	return convertedNum;
 }
 
-template <typename inT, typename outT, size_t size>
+template <typename inT, typename outT>
 std::vector<outT> convert_int_arr_to_bits_array(std::vector<inT> arr)
 {
 	std::vector<outT> convertedArr = {};
@@ -40,7 +41,7 @@ std::vector<outT> convert_int_arr_to_bits_array(std::vector<inT> arr)
 	{
 		if (num < 0)
 			num += 256;
-		std::vector<outT> temp = convert_to_bits<inT, outT, size>(num);
+		std::vector<outT> temp = convert_to_bits<inT, outT>(num);
 		for (outT byte : temp)
 			convertedArr.push_back(byte);
 	}
@@ -125,12 +126,12 @@ int main(int argc, char** argv)
 
 	std::cout << "File contents: " << fileContentsStr << std::endl;
 
-	std::vector<uint8_t> convertedFile32 = convert_int_arr_to_bits_array<uint32_t, uint8_t, 32>(string_to_int_array<uint32_t>(fileContentsStr));
+	std::vector<uint8_t> convertedFile32 = convert_int_arr_to_bits_array<uint32_t, uint8_t>(string_to_int_array<uint32_t>(fileContentsStr));
 
 	std::cout << "============Hex32============" << std::endl;
 	print_in_hex(convertedFile32);
 
-	std::vector<uint8_t> convertedFile16 = convert_int_arr_to_bits_array<uint16_t, uint8_t, 16>(string_to_int_array<uint16_t>(fileContentsStr));
+	std::vector<uint8_t> convertedFile16 = convert_int_arr_to_bits_array<uint16_t, uint8_t>(string_to_int_array<uint16_t>(fileContentsStr));
 
 	std::cout << "============Hex16============" << std::endl;
 	print_in_hex(convertedFile16);
@@ -141,7 +142,7 @@ int main(int argc, char** argv)
 	std::cout << std::endl;
 	print_in_dec(convertedFile16, "%08u ");
 
-	std::vector<uint8_t> convertedFile8 = convert_int_arr_to_bits_array<uint8_t, uint8_t, 8>(string_to_int_array<uint8_t>(fileContentsStr));
+	std::vector<uint8_t> convertedFile8 = convert_int_arr_to_bits_array<uint8_t, uint8_t>(string_to_int_array<uint8_t>(fileContentsStr));
 
 	std::cout << "============Hex8=============" << std::endl;
 	print_in_hex(convertedFile8);
