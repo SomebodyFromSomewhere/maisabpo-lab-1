@@ -18,23 +18,17 @@ int orOp(int op1, int op2)
 	return op1 | op2;
 }
 
-int evaluateExpr(int (*op)(int, int), const std::string& operand1, const std::string& operand2)
+int shl(int op1, int op2)
 {
-	int convertedOperand1 = 0;
-	int convertedOperand2 = 0;
-	int result = 0;
-	convertedOperand1 = std::stoi(operand1);
-	convertedOperand2 = std::stoi(operand2);
-	result = op(convertedOperand1, convertedOperand2);
-	std::cout << "|" << std::bitset<32>(convertedOperand1) << "|" << convertedOperand1 << '\n';
-	std::cout << "|" << std::bitset<32>(convertedOperand2) << "|" << convertedOperand2 << '\n';
-	std::cout << "|--------------------------------|" << '\n';
-	std::cout << "|" << std::bitset<32>(result) << "|" << result << std::endl;
-
-	return result;
+	return op2 << op1;
 }
 
-int evaluateExpr(int (*op)(int, int), const int& operand1, const int& operand2)
+int shr(int op1, int op2)
+{
+	return op2 >> op1;
+}
+
+int evaluateExpr_internal(int (*op)(int, int), const int& operand1, const int& operand2)
 {
 	int result = 0;
 	result = op(operand1, operand2);
@@ -45,6 +39,22 @@ int evaluateExpr(int (*op)(int, int), const int& operand1, const int& operand2)
 
 	return result;
 }
+
+int evaluateExpr(int (*op)(int, int), const int& operand1, const int& operand2)
+{
+	return evaluateExpr_internal(op, operand1, operand2);
+}
+
+int evaluateExpr(int (*op)(int, int), const std::string& operand1, const std::string& operand2)
+{
+	int convertedOperand1 = 0;
+	int convertedOperand2 = 0;
+	convertedOperand1 = std::stoi(operand1);
+	convertedOperand2 = std::stoi(operand2);
+
+	return evaluateExpr_internal(op, convertedOperand1, convertedOperand2);
+}
+
 
 int main()
 {
@@ -98,11 +108,14 @@ int main()
 			result = evaluateExpr(andOp, operand1, operand2);
 		else if (command == "or")
 			result = evaluateExpr(orOp, operand1, operand2);
+		else if (command == "shl")
+			result = evaluateExpr(shl, operand1, operand2);
+		else if (command == "shr")
+			result = evaluateExpr(shr, operand1, operand2);
 		else
 			std::cout << "Invalid command or argument!" << std::endl;
+
 		/*
-			shl - сдвинуть число2 на число1 бит влево
-			shr - сдвинуть число2 на число1 бит вправо
 			shl - циклически сдвинуть число2 на число1 бит влево
 			shr - циклически сдвинуть число2 на число1 бит вправо
 			mix - число1 указывает порядок бит(числа от 0 до 7), каждый байт числа 2 переставить указанном порядке
