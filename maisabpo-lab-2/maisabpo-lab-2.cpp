@@ -2,7 +2,7 @@
 #include <string>
 #include <bitset>
 
-#define TYPE uint64_t
+#define TYPE uint8_t
 
 template <typename T>
 T xorOp(T op1, T op2)
